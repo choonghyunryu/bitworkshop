@@ -1,0 +1,35 @@
+name: "workshop_lecture"
+title: "Publishing Meets Quarto"
+description: |
+  챗GPT 디지털 글쓰기와 출판 워크샵 - 전자출판
+output_dir: "docs"
+navbar:
+  right:
+    - text: "핸즈온 개요"
+      href: index.html
+    - text: "리소스 소개"
+      menu:
+        - text: "bitGPT"
+          href: bitgpt.html
+        - text: "---"      
+        - text: "bitPublish"
+          href: bitpublish.html
+        - text: "bitReport"
+          href: bitreport.html              
+    - text: "나의 도서 저작하기"
+      menu:
+        - text: "bitPublish 사용하기"
+          href: intro_pitpublish.html
+        - text: "---"      
+        - text: "디지털 서적 저작하기"
+          href: publish_book.html
+        - text: "덤으로 리포트 저작하기"
+          href: publish_report.html          
+        - text: "---"
+        - text: "학습 리소스"
+          href: resources.html   
+output: 
+  distill::distill_article:
+    theme: theme.css
+    includes:
+      after_body: footer.html       

@@ -1,0 +1,80 @@
+---
+title: "핸즈온 개요"
+description: |
+  본 핸즈온은 **전자출판 개념의 이해**를 돕고, **bitPublish**의 사용법 학습을 통해서 **사용자가 직접 출판물을 저작**할 수 있는 방법 습득을 목적으로 합니다. 
+site: distill::distill_website
+output:
+  distill::distill_article:
+    toc: true
+    toc_depth: 3  
+author:
+  - name: 유충현 
+    url: https://choonghyunryu.github.io/
+    affiliation: 한국R사용자회
+date: 2023-06-24    
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## 프로그램 개요
+
+* 주제: "챗GPT 디지털 글쓰기와 출판 워크샵"
+  - 챗GPT 활용 글감 작성(챗GPT) 
+      - 챗GPT를 활용하여 독창적이고 흥미로운 글감을 발굴하는 방법 학습
+  - 디지털 글쓰기 외양(Quarto) 
+      - 디지털 환경에서 효과적인 글쓰기를 위한 형식과 구조 학습
+  - 콘텐츠 배포와 공유(GitHub/Quarto Pub) 
+      - 디지털 플랫폼을 통해 제작한 콘텐츠의 효과적 배포/공유 학습
+  - **전자출판(bitPublish)** 
+      - **전자출판 과정의 이해 및 실제 출판 작업 실습**
+
+* 일시:
+  - 2023년 6월 24일 (토) 13:00 ~ 17:00
+* 장소:
+  - 성균관대학교 국제관 9B208
+  
+* 주최:
+  -  한국R사용자회
+
+## 발표자
+* 유충현:
+  - 현) 한국R사용자회 대표
+  - 현) 한화생명 DataLab 부장
+  
+## 핸즈온 내용
+* **bitPublish로 서적 저작하기**
+  - 아젠다
+      - 전자출판의 이해
+      - bitPublish의 이해
+      - 본문 컨텐츠에 bitGPT 적용
+  - 목적
+      - 자신의 지식과 노하우를 책으로 저작하기 위한 자신감 갖기
+* bitReport로 보고서 생성하기
+  - 아젠다
+      - bitReport 사용법의 이해
+  - 목적
+      - 재현가능한 깔끔한 보고서를 작성하는 방법 확보
+      
+> "bitReport로 보고서 생성하기"는 본 워크샾 주제와 관련이 적은 추가 컨텐츠로, 시간이 여의치 않으면 소개로 학습을 마칠 수 있습니다.
+
+## 사전 준비 작업
+
+### 네이버 검색 API 이용을 위해 애플리케이션 등록
+
+1. 네이버 회원가입과 개발자센터 접속
+    - [네이버 개발자센터](https://developers.naver.com/){target="_blank"} 접속
+2. 애플리케이션등록 신청
+    - [애플리케이션 등록](https://developers.naver.com/apps/#/register){target="_blank"} 화면 이동 후,
+    - 사용 API로 **검색** 선택 후
+    - 비로그인 오픈 API 서비스 환경으로 **WEB 설정** 선택 후 등록하기
+3.  kosacap 패키지의 설치
+    - 공공데이터 및 네이버 뉴스 스크랩하는 패키지
+    - 설치
+        - remotes::install_github("choonghyunryu/koscrap")
+
+      
+
+
+

@@ -1,0 +1,140 @@
+---
+title: "bitGPT"
+description: |
+  네이버 오픈 API를 이용한 데이터 수집 로직을 구현해 봅니다.  
+author:
+  - name: 유충현
+    url: https://choonghyunryu.github.io
+    affiliation: 한국R사용자회
+citation_url: https://choonghyunryu.github.io/bitworkshop/bitgpt
+date: 2023-06-24
+output:
+  distill::distill_article:
+    self_contained: false  
+    toc: true
+    toc_depth: 3    
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      message = FALSE, 
+                      warning = FALSE, 
+                      collapse = FALSE,
+                      fig.align = "center")
+library(shiny)
+library(htmltools)
+
+xaringanExtra::use_panelset()
+```
+
+```{r naver, echo=FALSE, out.width = "20%"}
+knitr::include_graphics("https://r2bit.com/bitGPT/reference/figures/bitGPT.png")
+```
+
+```{r, preface, echo=FALSE}
+div(class = "preface", 
+    h4("들어가기"),
+    "웹 브라우저에서 chatGPT를 사용하신다구요?", br(),
+    "그럼 문서에 chatGPT 질문과 답변을 넣을 때는 어떻게 하실건가요?.", br(),
+    "Copy & Paste가 능사는 아닙니다. bitGPT를 사용해 보세요. OPEN API로 쉽게 chatGPT를 연동합니다.")
+```
+
+## Overview
+
+chatGPT를 보다 쉽게 사용할 수 있는, 그리고 한국어를 지원하는 bitGPT.
+
+### Features
+
+- open API key를 관리 기능으로 인한 손쉬운 서비스 인터페이싱
+    - OpenAI의 API key
+    - Naver 파파고의 client ID와 secret
+- OpenAI의 채팅 자동 완성
+- OpenAI의 텍스트 자동 완성
+    - 한국어 프롬프트는 영어 프롬프트로 번역되어 질의하고 한글 결과 반환
+- OpenAI의 이미지 프로세싱
+    - 이미지 생성
+        - 영어 프롬프트와 한국어 프롬프트 지원
+        - 한국어 프롬프트는 영어 프롬프트로 번역되어 질의
+    - 이미지 편집
+        - 영어 프롬프트와 한국어 프롬프트 지원
+        - 한국어 프롬프트는 영어 프롬프트로 번역되어 질의
+    - 이미지 변형
+- 음성의 녹취를 위한 오디오 녹음 기능
+- OpenAI의 STT(Speech to Text)
+- Naver 파파고의 텍스트 번역기
+
+## Install bitGPT
+
+github 리파지토리로부터 다음의 명령어로 패키지를 설치합니다.:
+
+```{r}
+#| eval: false
+#| echo: true
+devtools::install_github("bit2r/bitGPT")
+```
+
+
+## Prepare API keys
+
+chatGPT를 사용하기 위해서는 [OpenAI](https://platform.openai.com/account/api-keys) 링크에서 회원을 가입하고 OpenAI API key를 발급받아야 합니다. **가입 후 첫 3달은 18 US 달러 credit이 무료이나, 이후에는 유료임을 인지하고 진행**하시기 바랍니다.
+
+또한 한국어 환경으로 좀 더 편안한 사용을 위해서는 Naver 파파고 API key도 준비해야 합니다. [오픈 API 이용신청 링크](https://developers.naver.com/apps/#/register?api=ppg_n2mt)에서 애플리케이션 등록(API 이용신청)을 통해서 API key를 발급받아야 합니다.
+
+### OpenAI API key 등록
+
+API key는 공유되어서는 안됩니다. 예시에서는 OpenAI API key가 XXXXXXXXXXX임을 가정하였습니다.
+
+`regist_openai_key()`를 한번 수행하면, 번거롭게 매번 세션마다 API key를 설정할 필요가 없습니다.
+
+```{r}
+#| eval: false
+#| echo: true
+library(bitGPT)
+
+# 실제 사용자가 할당받은 openai API key를 사용합니다.
+regist_openai_key("XXXXXXXXXXX")
+```
+
+만약에 개인 컴퓨터가 아닌 여러 사용자가 사용하는 환경에 bitGPT 패키지를 설치한 경우라면, API key의 보안을 위해서 `regist_openai_key()`대신 `set_openai_key()`를 사용하세요.
+
+`set_openai_key()`는 OpenAI API key를 R System environment에 설정하기 때문에 세션이 종료되고 다시 R을 구동해서 새로운 세션이 생기면, 재설정해야 합니다.
+
+```{r}
+#| eval: false
+#| echo: true
+# 실제 사용자가 할당받은 openai API key를 사용합니다.
+set_openai_key("XXXXXXXXXXX")
+```
+
+### Naver 파파고 API key 등록
+
+Naver 파파고 API key는 client ID와 client secret로 구성되어 있습니다. OpenAI API key와 유사한 방법으로 `regist_naver_key()`를 한번 수행하여 등록하거나, `set_naver_key()`로 세션 내에서 설정합니다.
+
+```{r}
+#| eval: false
+#| echo: true
+# 실제 사용자가 할당받은 Naver API key로 등록합니다.
+regist_naver_key(client_id = "XXXXXXXXXXX", client_secret = "XXXXXXXXXXX")
+```
+
+```{r}
+#| eval: false
+#| echo: true
+# 실제 사용자가 할당받은 Naver API key로 설정합니다.
+set_naver_key(client_id = "XXXXXXXXXXX", client_secret = "XXXXXXXXXXX")
+```
+
+
+## 리소스
+
+### 프로그램 리소스
+
+- [Github](https://github.com/bit2r/bitGPT)
+    
+
+### 참고 리소스
+
+- [pkgdown document](https://r2bit.com/bitGPT/)
+    - bitGPT 패키지 문서 페이지
+- [chatGPT와 데이터 사이언스](https://choonghyunryu.github.io/intro_Rpackages/slide/slide_bitGPT/#/title-slide)
+    - 2023년 4월 서울 R미트업 발표자료
